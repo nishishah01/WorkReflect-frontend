@@ -35,6 +35,12 @@ export default function RootLayout({
               >
                 Create Reflection
               </a>
+              <a 
+                href="/podcast/create"
+                className="block px-3 py-2 rounded-lg hover:bg-gray-100"
+              >
+                Host Internal Podcast
+              </a>
             </nav>
           </aside>
 
