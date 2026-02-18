@@ -73,6 +73,9 @@ export default function Home() {
                 <h2 className="text-lg font-semibold text-white group-hover:text-blue-100 transition-colors leading-snug flex-1">
                   {post.title}
                 </h2>
+                <p className="text-xs text-slate-500 mt-1">
+              Posted by {post.createdBy?.name || "Unknown"}
+                </p>
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono whitespace-nowrap mt-0.5 flex-shrink-0">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-60">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
