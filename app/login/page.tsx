@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data);
+        setError(data.message || "Login failed");
         return;
       }
 

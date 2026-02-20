@@ -39,59 +39,99 @@ export default function PostDetail({
   // ✅ Fetch post
   useEffect(() => {
     fetch(`http://localhost:5000/api/posts/${id}`)
-      .then((res) => res.json())
-      .then((data) => setPost(data));
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch post");
+        return res.json();
+      })
+      .then((data) => setPost(data))
+      .catch((err) => {
+        console.error("Error fetching post:", err);
+        setPost(null);
+      });
   }, [id]);
 
   // ✅ Fetch comments
   useEffect(() => {
     fetch(`http://localhost:5000/api/comments/${id}`)
-      .then((res) => res.json())
-      .then((data) => setComments(data));
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch comments");
+        return res.json();
+      })
+      .then((data) => setComments(Array.isArray(data) ? data : []))
+      .catch((err) => {
+        console.error("Error fetching comments:", err);
+        setComments([]);
+      });
   }, [id]);
 
   // ✅ Add comment
   const addComment = async () => {
     if (!newComment.trim()) return;
 
-    await fetch("http://localhost:5000/api/comments/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        postId: id,
-        text: newComment,
-      }),
-    });
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch("http://localhost:5000/api/comments/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          postId: id,
+          text: newComment,
+        }),
+      });
 
-    setNewComment("");
+      if (!res.ok) {
+        const error = await res.json();
+        alert(`Failed to add comment: ${error.error}`);
+        return;
+      }
 
-    const updated = await fetch(
-      `http://localhost:5000/api/comments/${id}`
-    );
-    setComments(await updated.json());
+      setNewComment("");
+
+      const updated = await fetch(
+        `http://localhost:5000/api/comments/${id}`
+      );
+      if (updated.ok) {
+        setComments(await updated.json());
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      alert("Failed to add comment. Please try again.");
+    }
   };
 
   // ✅ Reaction handler
   const react = async (type: string) => {
-    const res = await fetch(
-      `http://localhost:5000/api/posts/react/${id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ type }),
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/posts/react/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ type }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to add reaction");
       }
-    );
 
-    const updatedReactions = await res.json();
+      const updatedReactions = await res.json();
 
-    setPost((prev: any) => ({
-      ...prev,
-      reactions: updatedReactions,
-    }));
+      setPost((prev: any) => ({
+        ...prev,
+        reactions: updatedReactions,
+      }));
+    } catch (error) {
+      console.error("Error adding reaction:", error);
+      alert("Failed to add reaction. Please try again.");
+    }
   };
 
   if (!post) return (

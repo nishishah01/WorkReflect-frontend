@@ -7,48 +7,77 @@ export default function CreatePost() {
   const [tags, setTags] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const token = localStorage.getItem("token");
+
 
   // ✅ Publish function
   const handleSubmit = async () => {
     setIsSubmitting(true);
     let uploadedAudioUrl = "";
 
-    // STEP 1 — Upload audio first (if exists)
-    if (audioFile) {
-      const formData = new FormData();
-      formData.append("audio", audioFile);
+    try {
+      // Validate required fields
+      if (!title.trim() || !content.trim()) {
+        alert("Please fill in title and content");
+        setIsSubmitting(false);
+        return;
+      }
 
-      const uploadRes = await fetch(
-        "http://localhost:5000/api/posts/upload-audio",
-        {
-          method: "POST",
-          body: formData,
+      // STEP 1 — Upload audio first (if exists)
+      if (audioFile) {
+        const formData = new FormData();
+        formData.append("audio", audioFile);
+
+        const uploadRes = await fetch(
+          "http://localhost:5000/api/posts/upload-audio",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!uploadRes.ok) {
+          alert("Failed to upload audio. Please try again.");
+          setIsSubmitting(false);
+          return;
         }
-      );
 
-      const uploadData = await uploadRes.json();
-      uploadedAudioUrl = uploadData.audioUrl;
+        const uploadData = await uploadRes.json();
+        uploadedAudioUrl = uploadData.audioUrl;
+      }
+
+      // STEP 2 — Create post
+      const createRes = await fetch("http://localhost:5000/api/posts/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          tags: tags
+            .split(",")
+            .map((t) => t.trim().toLowerCase())
+            .filter(Boolean),
+          audioUrl: uploadedAudioUrl,
+        }),
+      });
+
+      if (!createRes.ok) {
+        const errorData = await createRes.json();
+        alert(`Failed to publish: ${errorData.error || "Unknown error"}`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // ✅ Only redirect after successful POST
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error publishing post:", error);
+      alert("An error occurred while publishing. Please try again.");
+      setIsSubmitting(false);
     }
-
-    // STEP 2 — Create post
-    await fetch("http://localhost:5000/api/posts/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-        content,
-        tags: tags
-          .split(",")
-          .map((t) => t.trim().toLowerCase())
-          .filter(Boolean),
-        audioUrl: uploadedAudioUrl,
-      }),
-    });
-
-    // redirect to feed
-    window.location.href = "/";
   };
 
   const parsedTags = tags.split(",").map(t => t.trim().toLowerCase()).filter(Boolean);
