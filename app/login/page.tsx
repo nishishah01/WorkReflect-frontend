@@ -71,7 +71,7 @@ export default function LoginPage() {
             </svg>
           </div>
           <div className="text-center">
-            <h1 className="font-display text-2xl text-white leading-none tracking-tight">Reflect AI</h1>
+            <h1 className="font-display text-2xl text-white leading-none tracking-tight">WorkReflect</h1>
             <p className="text-[11px] font-mono text-blue-400/60 uppercase tracking-widest mt-1">Internal Platform</p>
           </div>
         </div>
@@ -217,7 +217,7 @@ export default function LoginPage() {
 
         {/* Footer note */}
         <p className="text-center text-xs text-slate-600 font-mono mt-6">
-          Internal use only · Reflect AI Platform
+          Internal use only ·  WorkReflect Platform
         </p>
       </div>
     </div>

@@ -266,7 +266,7 @@ export default function RegisterPage() {
               <path d="M8 1L10.5 6H15L11 9.5L12.5 14.5L8 11.5L3.5 14.5L5 9.5L1 6H5.5L8 1Z" fill="white" fillOpacity="0.95" />
             </svg>
           </div>
-          <h1 className="font-display text-2xl text-white leading-none tracking-tight">Reflect AI</h1>
+          <h1 className="font-display text-2xl text-white leading-none tracking-tight">WorkReflect</h1>
           <p className="text-[11px] font-mono text-blue-400/60 uppercase tracking-widest mt-1">Internal Platform</p>
         </div>
 
@@ -420,7 +420,7 @@ export default function RegisterPage() {
         </div>
 
         <p className="text-center text-xs text-slate-600 font-mono mt-6">
-          Internal use only · Reflect AI Platform
+          Internal use only · WorkReflect Platform
         </p>
       </div>
     </div>

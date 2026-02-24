@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import UpgradeModal from "../components/UpgradeModal";
 import "./globals.css";
-
-
 export default function RootLayout({
   children,
 }: {
@@ -41,9 +39,7 @@ export default function RootLayout({
     clearSession();
     window.location.href = "/login";
   };
-
   const isPro = plan !== "free";
-
   return (
     <html lang="en">
       <body className="bg-void text-slate-100 antialiased">
@@ -58,7 +54,7 @@ export default function RootLayout({
             <div className="p-6 border-b border-navy-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-lg font-semibold text-white">Reflect AI</h1>
+                  <h1 className="text-lg font-semibold text-white">WorkReflect</h1>
                   <p className="text-[10px] text-slate-500">Internal Platform</p>
                 </div>
                 {isPro && (
