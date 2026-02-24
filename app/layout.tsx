@@ -1,8 +1,11 @@
 "use client";
 
+import { clearSession, getToken, getUser } from "@/lib/auth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import UpgradeModal from "../components/UpgradeModal";
 import "./globals.css";
+
 
 export default function RootLayout({
   children,
@@ -11,25 +14,41 @@ export default function RootLayout({
 }) {
   const [user, setUser] = useState<any>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [plan, setPlan] = useState<"free" | "pro" | "enterprise">("free");
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
-  // Load logged-in user from localStorage
+  // Load logged-in user from sessionStorage (per-tab) or localStorage (fallback)
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = getUser();
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setUser(storedUser);
+    }
+
+    // Fetch subscription plan
+    const token = getToken();
+    if (token) {
+      fetch("http://localhost:5000/api/stripe/status", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((r) => r.json())
+        .then((d) => setPlan(d.plan || "free"))
+        .catch(() => setPlan("free"));
     }
   }, []);
 
-  // Logout function
+  // Logout function — clears both sessionStorage and localStorage
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    clearSession();
     window.location.href = "/login";
   };
+
+  const isPro = plan !== "free";
 
   return (
     <html lang="en">
       <body className="bg-void text-slate-100 antialiased">
+        {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
+
         <div className="flex h-screen overflow-hidden">
 
           {/* ================= SIDEBAR ================= */}
@@ -37,35 +56,98 @@ export default function RootLayout({
 
             {/* Logo */}
             <div className="p-6 border-b border-navy-800">
-              <h1 className="text-lg font-semibold text-white">
-                Reflect AI
-              </h1>
-              <p className="text-[10px] text-slate-500">
-                Internal Platform
-              </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-lg font-semibold text-white">Reflect AI</h1>
+                  <p className="text-[10px] text-slate-500">Internal Platform</p>
+                </div>
+                {isPro && (
+                  <span style={{ background: "linear-gradient(135deg,#1e3464,#142040)", border: "1px solid rgba(59,130,246,0.25)", borderRadius: "20px", padding: "3px 9px", fontSize: "9px", color: "#93c5fd", fontFamily: "JetBrains Mono,monospace", letterSpacing: "0.08em", fontWeight: 700 }}>
+                    PRO
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-3 py-4 space-y-1">
-              <Link
-                href="/"
-                className="block px-3 py-2 rounded-lg text-sm hover:bg-navy-800"
-              >
-                Feed
+            <nav className="flex-1 px-3 py-4 overflow-y-auto">
+              {/* Admin */}
+              {user?.role === "admin" && (
+                <>
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-violet-400 hover:text-violet-300 transition-colors"
+                  >
+                    <span>📊</span>
+                    <span>Admin Dashboard</span>
+                  </Link>
+                  <div className="my-2 border-t border-navy-800" />
+                </>
+              )}
+
+              {/* Core */}
+              <p className="px-3 pt-1 pb-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest">Core</p>
+
+              <Link href="/" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-300 hover:text-white transition-colors">
+                <span>📰</span>
+                <span>Feed</span>
               </Link>
 
-              <Link
-                href="/create"
-                className="block px-3 py-2 rounded-lg text-sm hover:bg-navy-800"
-              >
-                Create Reflection
+              <Link href="/create" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-300 hover:text-white transition-colors">
+                <span>✏️</span>
+                <span>Write Reflection</span>
               </Link>
 
-              <Link
-                href="/podcast/create"
-                className="block px-3 py-2 rounded-lg text-sm hover:bg-navy-800"
-              >
-                Host Podcast
+              {/* Divider */}
+              <div className="my-3 border-t border-navy-800" />
+
+              {/* Premium */}
+              <p className="px-3 pt-1 pb-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest">Premium</p>
+
+              {/* Live Rooms */}
+              {
+                isPro ? (
+                  <Link
+                    href="/live-rooms"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-300 hover:text-white transition-colors"
+                  >
+                    <span>🎙</span>
+                    <span className="flex-1">Live Rooms</span>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22d3ee", flexShrink: 0, display: "inline-block" }} />
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => setShowUpgrade(true)}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-500 hover:text-slate-300 transition-colors text-left"
+                  >
+                    <span>🎙</span>
+                    <span className="flex-1">Live Rooms</span>
+                    <span style={{ background: "linear-gradient(135deg,#d97706,#f59e0b)", borderRadius: "20px", padding: "2px 7px", fontSize: "9px", color: "#fff", fontWeight: 700, fontFamily: "JetBrains Mono,monospace", letterSpacing: "0.06em", flexShrink: 0 }}>
+                      PRO
+                    </span>
+                  </button>
+                )
+              }
+
+              {/* Upgrade CTA for free users */}
+              {!isPro && (
+                <button
+                  onClick={() => setShowUpgrade(true)}
+                  className="w-full mt-2 flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left"
+                  style={{ background: "linear-gradient(135deg,rgba(124,58,237,0.08),rgba(37,99,235,0.08))", border: "1px solid rgba(124,58,237,0.15)", color: "#a78bfa", borderRadius: "10px" }}
+                >
+                  <span>💎</span>
+                  <span style={{ fontSize: "12px", fontWeight: 600 }}>Upgrade to Pro</span>
+                </button>
+              )}
+
+              <div className="my-3 border-t border-navy-800" />
+
+              <p className="px-3 pt-1 pb-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest">Other</p>
+
+              <Link href="/podcast/create" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-300 hover:text-white transition-colors">
+                <span>🎧</span>
+                <span>Podcast Upload</span>
               </Link>
             </nav>
 
@@ -87,8 +169,8 @@ export default function RootLayout({
                       <p className="text-xs font-medium text-slate-300">
                         {user.name}
                       </p>
-                      <p className="text-[10px] text-slate-500">
-                        Member
+                      <p className="text-[10px] text-slate-500 capitalize">
+                        {user?.role || "Member"}
                       </p>
                     </div>
                   </div>

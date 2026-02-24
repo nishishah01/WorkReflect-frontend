@@ -1,6 +1,8 @@
 "use client";
+import { getToken } from "@/lib/auth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 
 export default function Home() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -8,7 +10,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
 
     if (!token) {
       window.location.href = "/login";
@@ -27,6 +29,7 @@ export default function Home() {
     })
       .then(async (res) => {
         if (res.status === 401) {
+          sessionStorage.clear();
           localStorage.clear();
           window.location.href = "/login";
           return [];
