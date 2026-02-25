@@ -207,7 +207,7 @@ export default function StreaksPage() {
             setUpgraded(true);
             const sessionId = searchParams.get("session_id");
             if (sessionId) {
-                fetch("http://localhost:5000/api/stripe/verify-session", {
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/verify-session`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -222,7 +222,7 @@ export default function StreaksPage() {
         }
 
         // ── Check plan ────────────────────────────────────────────────────────────
-        fetch("http://localhost:5000/api/stripe/status", {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/status`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((r) => r.json())
@@ -238,7 +238,7 @@ export default function StreaksPage() {
                 }
 
                 // Fetch streaks data
-                return fetch("http://localhost:5000/api/analytics/streaks", {
+                return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/analytics/streaks`, {
                     headers: { Authorization: `Bearer ${token}` },
                 }).then((r) => r.json());
             })

@@ -40,7 +40,7 @@ export default function PostDetail({
 
   // ✅ Fetch post
   useEffect(() => {
-    fetch(`http://localhost:5000/api/posts/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch post");
         return res.json();
@@ -54,7 +54,7 @@ export default function PostDetail({
 
   // ✅ Fetch comments
   useEffect(() => {
-    fetch(`http://localhost:5000/api/comments/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comments/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch comments");
         return res.json();
@@ -72,7 +72,7 @@ export default function PostDetail({
 
     const token = getToken();
     try {
-      const res = await fetch("http://localhost:5000/api/comments/create", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comments/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export default function PostDetail({
       setNewComment("");
 
       const updated = await fetch(
-        `http://localhost:5000/api/comments/${id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/comments/${id}`
       );
       if (updated.ok) {
         setComments(await updated.json());
@@ -109,7 +109,7 @@ export default function PostDetail({
     const token = getToken();
     try {
       const res = await fetch(
-        `http://localhost:5000/api/posts/react/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/posts/react/${id}`,
         {
           method: "POST",
           headers: {
@@ -208,7 +208,7 @@ export default function PostDetail({
               </div>
             </div>
             <audio controls className="w-full">
-              <source src={`http://localhost:5000${post.audioUrl}`} />
+              <source src={`${process.env.NEXT_PUBLIC_API_URL}${post.audioUrl}`} />
               Your browser does not support audio.
             </audio>
           </div>

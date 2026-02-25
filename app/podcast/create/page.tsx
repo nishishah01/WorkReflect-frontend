@@ -16,7 +16,7 @@ export default function CreatePodcast() {
       formData.append("audio", audioFile);
 
       const uploadRes = await fetch(
-        "http://localhost:5000/api/posts/upload-audio",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/posts/upload-audio`,
         {
           method: "POST",
           body: formData,
@@ -27,7 +27,7 @@ export default function CreatePodcast() {
       uploadedAudioUrl = uploadData.audioUrl;
     }
 
-    await fetch("http://localhost:5000/api/posts/create", {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -63,10 +63,10 @@ export default function CreatePodcast() {
           <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-blue-900/20 to-navy-800/30 border border-blue-800/20">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-700/20 border border-blue-700/30 flex items-center justify-center">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-blue-400">
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                <line x1="12" y1="19" x2="12" y2="23"/>
-                <line x1="8" y1="23" x2="16" y2="23"/>
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" y1="19" x2="12" y2="23" />
+                <line x1="8" y1="23" x2="16" y2="23" />
               </svg>
             </div>
             <div>
@@ -109,7 +109,7 @@ export default function CreatePodcast() {
             <label className="flex flex-col items-center gap-3 p-8 rounded-xl border-2 border-dashed border-navy-700 bg-navy-900/30 cursor-pointer hover:border-blue-500/40 hover:bg-navy-800/40 transition-all group text-center">
               <div className="w-12 h-12 rounded-xl bg-navy-800 border border-navy-700 flex items-center justify-center group-hover:border-blue-500/30 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-slate-400 group-hover:text-blue-400 transition-colors">
-                  <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+                  <polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
                 </svg>
               </div>
               {audioFile ? (
@@ -139,7 +139,7 @@ export default function CreatePodcast() {
           <div className="flex items-center justify-between">
             <a href="/" className="text-sm text-slate-500 hover:text-slate-300 transition-colors flex items-center gap-1.5">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+                <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
               </svg>
               Cancel
             </a>
@@ -151,7 +151,7 @@ export default function CreatePodcast() {
               {isSubmitting ? (
                 <>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="animate-spin">
-                    <circle cx="12" cy="12" r="10" strokeOpacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"/>
+                    <circle cx="12" cy="12" r="10" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" />
                   </svg>
                   Publishing...
                 </>
@@ -159,7 +159,7 @@ export default function CreatePodcast() {
                 <>
                   Publish Podcast
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                   </svg>
                 </>
               )}

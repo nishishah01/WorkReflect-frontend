@@ -31,7 +31,7 @@ export default function UpgradeModal({ onClose, returnPath = "/" }: UpgradeModal
                 window.location.href = "/login";
                 return;
             }
-            const res = await fetch("http://localhost:5000/api/stripe/create-checkout", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/create-checkout`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

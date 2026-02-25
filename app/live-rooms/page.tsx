@@ -41,7 +41,7 @@ export default function LiveRoomsPage() {
             const sessionId = searchParams.get("session_id");
             if (sessionId && token) {
                 // Verify with Stripe and upgrade plan in DB
-                fetch("http://localhost:5000/api/stripe/verify-session", {
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/verify-session`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function LiveRoomsPage() {
     const fetchPlan = async () => {
         if (!token) return;
         try {
-            const res = await fetch("http://localhost:5000/api/stripe/status", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/status`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
@@ -81,7 +81,7 @@ export default function LiveRoomsPage() {
     const fetchRooms = async () => {
         if (!token) return;
         try {
-            const res = await fetch("http://localhost:5000/api/rooms/list", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rooms/list`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (res.ok) {
@@ -107,7 +107,7 @@ export default function LiveRoomsPage() {
         if (!newTitle.trim()) return;
         setCreating(true);
         try {
-            const res = await fetch("http://localhost:5000/api/rooms/create-room", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rooms/create-room`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

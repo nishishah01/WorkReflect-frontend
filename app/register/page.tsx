@@ -174,7 +174,7 @@ export default function RegisterPage() {
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/org/lookup/${inviteCode.trim().toUpperCase()}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/org/lookup/${inviteCode.trim().toUpperCase()}`
         );
         if (res.ok) {
           const data = await res.json();
@@ -210,7 +210,7 @@ export default function RegisterPage() {
     if (!createValid) return;
     setError(""); setSuccess(""); setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register/create-org", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register/create-org`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, company }),
@@ -231,7 +231,7 @@ export default function RegisterPage() {
     if (!joinValid) return;
     setError(""); setSuccess(""); setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register/join", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register/join`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, inviteCode }),
@@ -278,8 +278,8 @@ export default function RegisterPage() {
             <button
               onClick={() => switchTab("join")}
               className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${tab === "join"
-                  ? "bg-blue-600 text-white shadow"
-                  : "text-slate-400 hover:text-slate-200"
+                ? "bg-blue-600 text-white shadow"
+                : "text-slate-400 hover:text-slate-200"
                 }`}
             >
               🔑 Join with Invite
@@ -287,8 +287,8 @@ export default function RegisterPage() {
             <button
               onClick={() => switchTab("create")}
               className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${tab === "create"
-                  ? "bg-violet-600 text-white shadow"
-                  : "text-slate-400 hover:text-slate-200"
+                ? "bg-violet-600 text-white shadow"
+                : "text-slate-400 hover:text-slate-200"
                 }`}
             >
               🏢 Create Organisation

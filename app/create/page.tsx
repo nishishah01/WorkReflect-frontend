@@ -47,7 +47,7 @@ export default function CreateReflection() {
             const formData = new FormData();
             formData.append("audio", file);
 
-            const res = await fetch("http://localhost:5000/api/posts/upload-audio", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/upload-audio`, {
                 method: "POST",
                 body: formData,
             });
@@ -81,7 +81,7 @@ export default function CreateReflection() {
                 return;
             }
 
-            const res = await fetch("http://localhost:5000/api/posts/create", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

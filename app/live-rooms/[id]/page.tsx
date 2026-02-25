@@ -46,7 +46,7 @@ export default function LiveRoomPage({ params }: { params: Promise<{ id: string 
         const initRoom = async () => {
             try {
                 // Get ZEGOCLOUD token from backend
-                const res = await fetch("http://localhost:5000/api/rooms/token", {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rooms/token`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

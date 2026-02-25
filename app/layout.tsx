@@ -25,7 +25,7 @@ export default function RootLayout({
     // Fetch subscription plan
     const token = getToken();
     if (token) {
-      fetch("http://localhost:5000/api/stripe/status", {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/status`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((r) => r.json())

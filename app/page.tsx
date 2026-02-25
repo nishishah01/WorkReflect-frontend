@@ -17,7 +17,7 @@ export default function Home() {
       return;
     }
 
-    let url = "http://localhost:5000/api/posts";
+    let url = `${process.env.NEXT_PUBLIC_API_URL}/api/posts`;
     if (selectedTag) {
       url += `?tag=${selectedTag}`;
     }

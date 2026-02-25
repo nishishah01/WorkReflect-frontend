@@ -152,7 +152,7 @@ export default function AdminDashboard() {
         if (user?.role !== "admin") { window.location.href = "/"; return; }
 
         const headers = { Authorization: `Bearer ${token}` };
-        const base = "http://localhost:5000/api/analytics";
+        const base = `${process.env.NEXT_PUBLIC_API_URL}/api/analytics`;
 
         // Fetch analytics + org info in parallel
         Promise.all([
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
             fetch(`${base}/participation`, { headers }).then((r) => r.json()),
             fetch(`${base}/sentiment`, { headers }).then((r) => r.json()),
             fetch(`${base}/growth`, { headers }).then((r) => r.json()),
-            fetch("http://localhost:5000/api/org/my", { headers }).then((r) => r.json()),
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/org/my`, { headers }).then((r) => r.json()),
         ])
             .then(([ov, tp, pt, sn, gr, org]) => {
                 setOverview(ov);
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
         setRegenerating(true);
         try {
             const token = getToken();
-            const res = await fetch("http://localhost:5000/api/org/regenerate-invite", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/org/regenerate-invite`, {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}` },
             });
