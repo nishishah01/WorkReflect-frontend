@@ -150,7 +150,7 @@ export default function LiveRoomsPage() {
 
     return (
         <div className="min-h-screen bg-void">
-            {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
+            {showUpgrade && <UpgradeModal returnPath="/live-rooms" onClose={() => setShowUpgrade(false)} />}
 
             {/* Create Room Modal */}
             {showCreate && (
@@ -385,7 +385,7 @@ export default function LiveRoomsPage() {
                                 ))}
                             </div>
                             <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "12px 24px", background: "linear-gradient(135deg, #7c3aed, #2563eb)", borderRadius: "12px", color: "#fff", fontWeight: 700, fontSize: "14px" }}>
-                                💎 Upgrade to Pro — ₹499/month
+                                💎 Upgrade to Pro — ₹150/month
                             </div>
                         </div>
                     </div>

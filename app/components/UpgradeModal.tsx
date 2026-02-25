@@ -3,10 +3,8 @@
 import { getToken } from "@/lib/auth";
 import { useState } from "react";
 
-
 interface UpgradeModalProps {
     onClose: () => void;
-    returnPath?: string;
 }
 
 const FEATURES = [
@@ -14,11 +12,12 @@ const FEATURES = [
     { icon: "🎥", label: "Optional Video Rooms (townhalls, Q&A)" },
     { icon: "✋", label: "Raise hand to speak + live chat" },
     { icon: "🤖", label: "AI transcription & session summaries" },
-    { icon: "🔥", label: "Reflection Streaks & team leaderboard" },
-    { icon: "📅", label: "365-day contribution heatmap (like GitHub)" },
+    { icon: "🎯", label: "Auto-extract decisions & action items" },
+    { icon: "💾", label: "Save & replay past sessions" },
+    { icon: "📊", label: "Advanced analytics dashboard" },
 ];
 
-export default function UpgradeModal({ onClose, returnPath = "/" }: UpgradeModalProps) {
+export default function UpgradeModal({ onClose }: UpgradeModalProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -37,7 +36,6 @@ export default function UpgradeModal({ onClose, returnPath = "/" }: UpgradeModal
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ returnPath }),
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Failed to create checkout");

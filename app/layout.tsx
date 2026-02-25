@@ -94,6 +94,11 @@ export default function RootLayout({
                 <span>Write Reflection</span>
               </Link>
 
+              <Link href="/podcast/create" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-300 hover:text-white transition-colors">
+                <span>🎧</span>
+                <span>Podcast Upload</span>
+              </Link>
+
               {/* Divider */}
               <div className="my-3 border-t border-navy-800" />
 
@@ -125,6 +130,31 @@ export default function RootLayout({
                 )
               }
 
+              {/* Reflection Streaks */}
+              {
+                isPro ? (
+                  <Link
+                    href="/streaks"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-300 hover:text-white transition-colors"
+                  >
+                    <span>🔥</span>
+                    <span className="flex-1">Streaks</span>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#f97316", flexShrink: 0, display: "inline-block" }} />
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => setShowUpgrade(true)}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-500 hover:text-slate-300 transition-colors text-left"
+                  >
+                    <span>🔥</span>
+                    <span className="flex-1">Streaks</span>
+                    <span style={{ background: "linear-gradient(135deg,#d97706,#f59e0b)", borderRadius: "20px", padding: "2px 7px", fontSize: "9px", color: "#fff", fontWeight: 700, fontFamily: "JetBrains Mono,monospace", letterSpacing: "0.06em", flexShrink: 0 }}>
+                      PRO
+                    </span>
+                  </button>
+                )
+              }
+
               {/* Upgrade CTA for free users */}
               {!isPro && (
                 <button
@@ -136,15 +166,6 @@ export default function RootLayout({
                   <span style={{ fontSize: "12px", fontWeight: 600 }}>Upgrade to Pro</span>
                 </button>
               )}
-
-              <div className="my-3 border-t border-navy-800" />
-
-              <p className="px-3 pt-1 pb-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest">Other</p>
-
-              <Link href="/podcast/create" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-navy-800 text-slate-300 hover:text-white transition-colors">
-                <span>🎧</span>
-                <span>Podcast Upload</span>
-              </Link>
             </nav>
 
             {/* ================= USER FOOTER ================= */}
