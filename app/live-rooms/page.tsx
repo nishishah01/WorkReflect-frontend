@@ -2,7 +2,7 @@
 
 import { getToken } from "@/lib/auth";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import UpgradeModal from "../../components/UpgradeModal";
 
 
@@ -18,7 +18,7 @@ type Room = {
 
 type Plan = "free" | "pro" | "enterprise";
 
-export default function LiveRoomsPage() {
+function LiveRoomsInner() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -480,5 +480,20 @@ export default function LiveRoomsPage() {
         }
       `}</style>
         </div>
+    );
+}
+
+export default function LiveRoomsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-void flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-10 h-10 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin" />
+                    <p className="text-slate-500 text-sm font-mono">Loading rooms...</p>
+                </div>
+            </div>
+        }>
+            <LiveRoomsInner />
+        </Suspense>
     );
 }

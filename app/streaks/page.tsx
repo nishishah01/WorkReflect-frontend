@@ -2,7 +2,7 @@
 
 import { getToken, getUser } from "@/lib/auth";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import UpgradeModal from "../../components/UpgradeModal";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -188,7 +188,7 @@ function RankBadge({ rank }: { rank: number }) {
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
-export default function StreaksPage() {
+function StreaksInner() {
     const [data, setData] = useState<StreaksData | null>(null);
     const [loading, setLoading] = useState(true);
     const [isPro, setIsPro] = useState(false);
@@ -504,5 +504,20 @@ export default function StreaksPage() {
                 </p>
             </div>
         </>
+    );
+}
+
+export default function StreaksPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-void flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin" />
+                    <p className="text-slate-500 text-sm font-mono">Loading streaks...</p>
+                </div>
+            </div>
+        }>
+            <StreaksInner />
+        </Suspense>
     );
 }
